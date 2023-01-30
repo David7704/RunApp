@@ -6,7 +6,7 @@ import ActivityList from '../components/ActivityList';
 const ProfileScreen = () => {
   return (
     <View>
-        <UserBanner name="John Stone" age="23"/>
+        <UserBanner name="John Doe" age="23"/>
         <ActivityList />
 
     </View>

@@ -13,8 +13,7 @@ const UserBanner = ({name, age}) => {
        style={styles.image}
       />       
       <View style={styles.textParent}>
-        <Text style={styles.text}>{name},</Text>
-        <Text style={styles.text}> {age}</Text>
+        <Text style={styles.text}>{name}, {age}</Text>
       </View>
     </Box>
   );  
@@ -41,11 +40,11 @@ const styles = StyleSheet.create({
     },
     textParent:{
       flex:1,
-      justifyContent: "center",
+      justifyContent: 'space-between',
       textAlignVertical: "center",
       flexDirection: 'row',
       alignItems: 'center',
-      marginLeft: 5
+      marginLeft: 15
       //backgroundColor: 'blue',
     },
     text:{

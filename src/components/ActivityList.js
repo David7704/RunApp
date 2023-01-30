@@ -13,7 +13,7 @@ const ActivityList = () =>{
             data={RunData.activities}
             renderItem={({ item }) => {
                 return (
-                    <Activity item={item}/>
+                    <Activity item={item} />
                 );
             }}
             keyExtractor={item => item.id}
