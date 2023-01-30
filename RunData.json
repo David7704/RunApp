@@ -1,0 +1,52 @@
+{
+  "activities": [
+    {
+     "id": "1",
+     "date": "2022-01-02",
+     "distance": "3km",
+     "elapsedTime": "15"
+    },
+    {
+     "id": "2",
+     "date": "2022-01-15",
+     "distance": "10km",
+     "elapsedTime": "60"
+    },
+    {
+     "id": "3",
+     "date": "2022-01-19",
+     "distance": "1km",
+     "elapsedTime": "5"
+    },
+    {
+     "id": "4",
+     "date": "2022-01-27",
+     "distance": "3km",
+     "elapsedTime": "17"
+    },
+    {
+     "id": "5",
+     "date": "2022-01-30",
+     "distance": "7km",
+     "elapsedTime": "10"
+    },
+    {
+     "id": "6",
+     "date": "2022-01-31",
+     "distance": "8km",
+     "elapsedTime": "30"
+    },
+    {
+     "id": "7",
+     "date": "2022-02-01",
+     "distance": "2km",
+     "elapsedTime": "10"
+    },
+    {
+     "id": "8",
+     "date": "2022-02-03",
+     "distance": "17km",
+     "elapsedTime": "86"
+    }
+   ]
+}

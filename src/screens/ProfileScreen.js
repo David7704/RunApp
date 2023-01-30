@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import UserBanner from '../components/UserBanner';
-
+import ActivityList from '../components/ActivityList';
 
 const ProfileScreen = () => {
   return (
     <View>
         <UserBanner name="John Stone" age="23"/>
+        <ActivityList />
 
-        <Text> Profile Screen </Text>
     </View>
   );  
 };

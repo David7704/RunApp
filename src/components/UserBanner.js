@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Avatar, Box } from "native-base";
 
 const UserBanner = ({name, age}) => {
@@ -16,11 +16,7 @@ const UserBanner = ({name, age}) => {
         <Text style={styles.text}>{name},</Text>
         <Text style={styles.text}> {age}</Text>
       </View>
-    
-      
-      
     </Box>
-
   );  
 };
 
@@ -34,7 +30,6 @@ const styles = StyleSheet.create({
       borderColor: 'black',
       borderTopWidth: 0.8,
       borderBottomWidth: 0.8
-
     },
     image:{
       width:88,
@@ -52,15 +47,11 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       marginLeft: 5
       //backgroundColor: 'blue',
-      
     },
-
     text:{
       fontSize: 25,
       //backgroundColor: 'red',
     }
-
-
 });
 
 export default UserBanner;
