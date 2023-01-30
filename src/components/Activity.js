@@ -6,8 +6,8 @@ const Activity = ({ item }) =>{
   return (
     <Box style={styles.container}>
         <View style={styles.textParent}>
-            <Text style={styles.distance}>{item.distance}</Text>
             <Text style={styles.time}>{item.elapsedTime}m</Text>
+            <Text style={styles.distance}>{item.distance}</Text>
             <Text style={styles.date}>{item.date}</Text>           
         </View>
     </Box>

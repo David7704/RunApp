@@ -24,8 +24,9 @@ const ActivityList = () =>{
 
 const styles = StyleSheet.create({
     container:{
-        height: '80%',
+        height: '70%',
         width: '100%',
+        //backgroundColor: 'red'
     }
 });
 
