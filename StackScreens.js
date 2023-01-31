@@ -21,7 +21,7 @@ const StackScreens = () => {
         component={RecordRunScreen}
         options={{
           //headerShown: false,
-          title: 'Record a Run'
+          title: 'Record'
         }}
       />
     </Stack.Navigator>

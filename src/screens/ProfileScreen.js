@@ -14,7 +14,7 @@ const ProfileScreen = ({ navigation }) => {
             onPress={() => navigation.navigate('Record')}
             size='lg'
             variant='outline'
-            colorScheme='secondary'
+            //colorScheme='secondary'
             px='20' _text={{fontSize: 'lg'}}
             borderRadius='2xl'
             borderWidth='2.5'

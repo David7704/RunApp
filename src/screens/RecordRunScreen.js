@@ -10,7 +10,9 @@ const RecordRunScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    
+    container:{
+      
+    }
 });
 
 export default RecordRunScreen;
