@@ -20,8 +20,7 @@ const StackScreens = () => {
         name='Record'
         component={RecordRunScreen}
         options={{
-          //headerShown: false,
-          title: 'Record'
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
