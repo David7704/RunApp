@@ -27,7 +27,6 @@ const ProfileScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     container:{
-      //backgroundColor: '#ffffff',
       height: '100%',
       flex: 1,
       justifyContent: 'flex-end' //Could be a problem - applied to whole profile page
