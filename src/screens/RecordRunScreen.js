@@ -4,38 +4,36 @@ import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
 import { Dimensions } from 'react-native';
 
-
 const RecordRunScreen = () => {
-  
   const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState('');
   
-  //Controls zoom level of map
-  const { height, width } = Dimensions.get( 'window' );
-  const LATITUDE_DELTA = 0.005;
-  const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
- 
-  
-  //Ensure that location permissions are enabled
-  //When the component is loaded for the first time, request location permission from user.
-  //If not granted, exit. If granted, get user's current location and store this object in state
   useEffect(() => {
      (async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted'){
-          console.log("ERROR");
-          return;
-          }
         try{
-          let location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
-          setLocation(location);
-          console.log(location);
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted'){
+            setErrorMsg('Permission not granted');
+            return;
+            }           
         }catch(e){
-          console.log("ERROR");
+          setErrorMsg('Permission not granted');
+        }
+        try{
+          let location1 = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
+          setLocation(location1);
+        }catch(e){
+          setErrorMsg('Unable to retrieve user location');
           return;
         }
       })();
-    }, []);  
-   
+    }, []);
+
+  const { height, width } = Dimensions.get( 'window' );
+  const LATITUDE_DELTA = 0.005; //Controls zoom level of map
+  const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
+ 
+ 
   return (
     <View>
         {location ?
@@ -51,7 +49,7 @@ const RecordRunScreen = () => {
               longitudeDelta: LONGITUDE_DELTA,
             }}
           />
-        : null}
+        : <Text style={styles.errorText}>{errorMsg}</Text>}
     </View>
   );  
 };
@@ -60,6 +58,11 @@ const styles = StyleSheet.create({
     map:{
       width: '100%',
       height: '75%'
+    },
+    errorText:{
+      fontSize: 32,
+      textAlign: 'center',
+      marginTop: '15%'
     }
 });
 
