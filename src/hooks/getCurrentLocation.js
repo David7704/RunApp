@@ -4,21 +4,19 @@ const getCurrentLocation = async () => {
   let location = null;
   let errorMsg = '';
 
-  try {
+  try{
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       errorMsg = 'Permission not granted';
       return { location, errorMsg };
     }
-  } catch (e) {
+  }catch(e){
     errorMsg = 'Permission not granted';
   }
   
-  try {
-    location = await Location.getCurrentPositionAsync({
-      enableHighAccuracy: true,
-    });
-  } catch (e) {
+  try{
+    location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
+  }catch(e){
     errorMsg = 'Unable to retrieve user location';
     return { location, errorMsg };
   }
