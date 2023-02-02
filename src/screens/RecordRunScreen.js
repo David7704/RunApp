@@ -9,6 +9,7 @@ const RecordRunScreen = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
   
+  //Permissions and setting location (Run only once)
   useEffect(() => {
     (async () => {
       const { location: locationResult, errorMsg: errorMsgResult } = await getCurrentLocation();
@@ -16,11 +17,12 @@ const RecordRunScreen = () => {
       setErrorMsg(errorMsgResult);
     })();
   }, []);
-
+  
+  console.log(location);
   const { height, width } = Dimensions.get( 'window' );
   const LATITUDE_DELTA = 0.005; //Controls zoom level of map
   const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
- 
+  
   return (
     <View>
         {location ?
@@ -29,12 +31,20 @@ const RecordRunScreen = () => {
             showsUserLocation={true}
             followsUserLocation={true}
             showsMyLocationButton={false}
+            
             initialRegion={{
+              latitude: 37.8025259,
+              longitude: -122.4351431,
+              latitudeDelta: 0.005,
+              longitudeDelta: 0.0026627218934911242,
+            }}
+            region={{
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA,
             }}
+  
           />
         : <Text style={styles.errorText}>{errorMsg}</Text>}
     </View>
