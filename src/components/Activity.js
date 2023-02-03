@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
     },
     textParent:{
-      flex:1,
+      flex: 1,
       flexDirection: 'row',
       justifyContent: 'space-between'
     },

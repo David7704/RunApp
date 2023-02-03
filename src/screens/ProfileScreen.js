@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Button } from "native-base";
 import UserBanner from '../components/UserBanner';
 import ActivityList from '../components/ActivityList';
