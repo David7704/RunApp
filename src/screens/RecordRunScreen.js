@@ -109,8 +109,7 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',    
     },
     endRunButton:{
-      textAlign: 'centre',
-      marginBottom: '10%'     
+      textAlign: 'centre',     
     },
     buttonContainer:{
       height: '20%',
