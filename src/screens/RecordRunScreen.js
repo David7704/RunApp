@@ -8,9 +8,9 @@ const RecordRunScreen = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState('Use effect not run');
   const [time, setTime] = useState(0);
-  const baseTime = Date.now();
   
   //Runs once on component mount
+  const baseTime = Date.now();
   useEffect(() => {
     let secTimer = setInterval( () => {
       setTime(Date.now() - baseTime)
@@ -19,44 +19,39 @@ const RecordRunScreen = () => {
   }, []); 
   
   //Permissions and setting location (Run only once)
-  useEffect(() => {
-    (async () => {
-      const { location: locationResult, errorMsg: errorMsgResult } = await getCurrentLocation();
-      setLocation(locationResult);
-      setErrorMsg(errorMsgResult);
-    })();
-  }, []);
+  //DONT KNOW IF THE FIRST ONE IS NEEDED ANYMORE
+useEffect(() => {
+  (async () => {
+    const { location: locationResult, errorMsg: errorMsgResult } = await getCurrentLocation();
+    setLocation(locationResult);
+    setErrorMsg(errorMsgResult);
+  })();
+
+  const intervalId = setInterval(async () => {
+    const { location: locationResult, errorMsg: errorMsgResult } = await getCurrentLocation();
+    setLocation(locationResult);
+    setErrorMsg(errorMsgResult);
+    console.log("UPDATED LOCATION");
+    console.log(locationResult);
+  }, 3000);
+
+  return () => clearInterval(intervalId);
+}, []);
   
-  console.log(location);
   const { height, width } = Dimensions.get( 'window' );
   const LATITUDE_DELTA = 0.005; //Controls zoom level of map
   const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
-
-  //Only center it on user if they move like 100 meters or something
-  const mapView = React.createRef();
-  const CenterMapOnUser = () => {
-    if (!mapView.current) return;
-    const { coords: { latitude, longitude } } = location;
-    mapView.current.animateToRegion({
-      longitude: longitude,
-      latitude: latitude,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LONGITUDE_DELTA,
-    });
-  };
 
   const timeInSeconds = time / 1000;
   const minutes = Math.floor(timeInSeconds / 60);
   const seconds = Math.floor(timeInSeconds % 60);
   const hours = Math.floor(minutes / 60);
   const formattedTime = `${hours.toString().padStart(2, '0')}:${(minutes % 60).toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
- //<TouchableOpacity onPress={CenterMapOnUser}><Text>Center on User</Text></TouchableOpacity>     
+    
   return (
     <View>
       {location ?
         <MapView
-          ref={mapView}
           style={styles.map}
           showsUserLocation={true}
           followsUserLocation={true}
@@ -77,9 +72,8 @@ const RecordRunScreen = () => {
           <Text style={styles.informationText}>Distance</Text>                  
         </Box>        
         <Box style={styles.runData}>
-          <Text style={styles.informationText}>
-            {formattedTime}
-          </Text>                           
+          <Text style={styles.informationText}>{formattedTime}</Text>
+          <Text style={styles.informationText}>0.0km</Text>                           
         </Box>   
       </Box>
            
