@@ -7,7 +7,18 @@ import getCurrentLocation from '../hooks/getCurrentLocation';
 const RecordRunScreen = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState('Use effect not run');
-
+  const [time, setTime] = useState(new Date());
+  const baseTime = new Date();
+  
+  //Runs once on component mount
+  useEffect(() => {
+    let secTimer = setInterval( () => {
+      setTime(new Date(Date.now() - baseTime))
+      //console.log(time);
+    },1000)
+    return () => clearInterval(secTimer);
+  }, []); 
+  
   //Permissions and setting location (Run only once)
   useEffect(() => {
     (async () => {
@@ -34,6 +45,11 @@ const RecordRunScreen = () => {
       longitudeDelta: LONGITUDE_DELTA,
     });
   };
+
+let hours = time.getHours() - 1;
+let minutes = time.getMinutes();
+let seconds = time.getSeconds();
+  
  //<TouchableOpacity onPress={CenterMapOnUser}><Text>Center on User</Text></TouchableOpacity>     
   return (
     <View>
@@ -60,8 +76,12 @@ const RecordRunScreen = () => {
           <Text style={styles.informationText}>Distance</Text>                  
         </Box>        
         <Box style={styles.runData}>
-          <Text style={styles.informationText}>00:00:00</Text>
-          <Text style={styles.informationText}>0.0km</Text>                  
+          <Text style={styles.informationText}>
+            {hours < 10 ? "0" + hours : hours}:
+            {minutes < 10 ? "0" + minutes : minutes}:
+            {seconds < 10 ? "0" + seconds : seconds}
+          </Text>          
+          <Text style={styles.informationText}>{time.getSeconds()}</Text>                  
         </Box>   
       </Box>
            
