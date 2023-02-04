@@ -7,14 +7,13 @@ import getCurrentLocation from '../hooks/getCurrentLocation';
 const RecordRunScreen = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState('Use effect not run');
-  const [time, setTime] = useState(new Date());
-  const baseTime = new Date();
+  const [time, setTime] = useState(0);
+  const baseTime = Date.now();
   
   //Runs once on component mount
   useEffect(() => {
     let secTimer = setInterval( () => {
-      setTime(new Date(Date.now() - baseTime))
-      //console.log(time);
+      setTime(Date.now() - baseTime)
     },1000)
     return () => clearInterval(secTimer);
   }, []); 
@@ -46,10 +45,12 @@ const RecordRunScreen = () => {
     });
   };
 
-let hours = time.getHours() - 1;
-let minutes = time.getMinutes();
-let seconds = time.getSeconds();
-  
+  const timeInSeconds = time / 1000;
+  const minutes = Math.floor(timeInSeconds / 60);
+  const seconds = Math.floor(timeInSeconds % 60);
+  const hours = Math.floor(minutes / 60);
+  const formattedTime = `${hours.toString().padStart(2, '0')}:${(minutes % 60).toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
  //<TouchableOpacity onPress={CenterMapOnUser}><Text>Center on User</Text></TouchableOpacity>     
   return (
     <View>
@@ -77,11 +78,8 @@ let seconds = time.getSeconds();
         </Box>        
         <Box style={styles.runData}>
           <Text style={styles.informationText}>
-            {hours < 10 ? "0" + hours : hours}:
-            {minutes < 10 ? "0" + minutes : minutes}:
-            {seconds < 10 ? "0" + seconds : seconds}
-          </Text>          
-          <Text style={styles.informationText}>{time.getSeconds()}</Text>                  
+            {formattedTime}
+          </Text>                           
         </Box>   
       </Box>
            
