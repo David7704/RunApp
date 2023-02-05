@@ -3,11 +3,30 @@ import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-nati
 import { Button, Box } from "native-base";
 import MapView from 'react-native-maps';
 import getCurrentLocation from '../hooks/getCurrentLocation';
+import getDistance from 'geolib/es/getDistance';
+
 
 const RecordRunScreen = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState('Use effect not run');
   const [time, setTime] = useState(0);
+  
+  const [points, setPoints] = useState([]);
+  
+  const [distance, setDistance] = useState(0); //meters
+  const [lastPoint, setLastPoint] = useState(null); //null correct?
+  
+  
+  const addPoint = ( item ) => {
+    // from location state -> retrieve: latitude, longitude, timestamp
+    const { coords: { latitude, longitude }, timestamp } = item;
+    setPoints( prevPoints => [...prevPoints, { latitude, longitude, timestamp }]);
+    console.log("LAST POINT SET!!!!");
+    //console.log({ latitude, longitude });
+    setLastPoint({ latitude, longitude });
+    //console.log(lastPoint);
+    
+  };
   
   //Runs once on component mount
   const baseTime = Date.now();
@@ -19,24 +38,52 @@ const RecordRunScreen = () => {
   }, []); 
   
   //Permissions and setting location (Run only once)
-  //DONT KNOW IF THE FIRST ONE IS NEEDED ANYMORE
-useEffect(() => {
-  (async () => {
-    const { location: locationResult, errorMsg: errorMsgResult } = await getCurrentLocation();
-    setLocation(locationResult);
-    setErrorMsg(errorMsgResult);
-  })();
 
-  const intervalId = setInterval(async () => {
-    const { location: locationResult, errorMsg: errorMsgResult } = await getCurrentLocation();
-    setLocation(locationResult);
-    setErrorMsg(errorMsgResult);
-    console.log("UPDATED LOCATION");
-    console.log(locationResult);
-  }, 3000);
+  useEffect(() => {
+    // run getCurrentLocation once on component mount
+    (async () => {
+      const { location: locationResult, errorMsg: errorMsgResult } = await getCurrentLocation();
+      setLocation(locationResult);
+      setErrorMsg(errorMsgResult);
+      addPoint(locationResult);
+    })();
+    
+    // set up interval to run getCurrentLocation every 3 seconds
+    const intervalId = setInterval(async () => {
+      const { location: locationResult, errorMsg: errorMsgResult } = await getCurrentLocation();
+      setLocation(locationResult);
+      setErrorMsg(errorMsgResult);
+      setDistance(distance + calculateDistance (locationResult));
+      addPoint(locationResult);
+      console.log(lastPoint);
+      
+      //Calculate distance between this point and lastPoint
+      
+    }, 3000);
 
-  return () => clearInterval(intervalId);
-}, []);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const printPoints = () => {
+    points.forEach(item => {
+      console.log(item);
+    });
+    console.log(points.length);
+  };
+  
+  const calculateDistance = ( currentLocation ) => {
+   // lastPoint is an actual point of 3 parts
+   // currentLocation is a location object (covert)
+    let { coords: { latitude, longitude } } = currentLocation;
+    
+    console.log("CALCULATING DISTANCE!!!!");
+    //console.log(lastPoint);
+    
+    return getDistance(
+      {latitude: lastPoint.latitude,longitude: lastPoint.longitude},
+      {latitude: latitude,longitude: longitude}
+    )
+  };
   
   const { height, width } = Dimensions.get( 'window' );
   const LATITUDE_DELTA = 0.005; //Controls zoom level of map
@@ -73,13 +120,13 @@ useEffect(() => {
         </Box>        
         <Box style={styles.runData}>
           <Text style={styles.informationText}>{formattedTime}</Text>
-          <Text style={styles.informationText}>0.0km</Text>                           
+          <Text style={styles.informationText}>{distance}</Text>                           
         </Box>   
       </Box>
            
       <Box style={styles.buttonContainer}>
         <Button
-          //onPress={() => navigation.navigate('Record')}
+          onPress={() => {printPoints()}}
           style={styles.endRunButton}
           size='lg'
           variant='outline'
