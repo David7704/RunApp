@@ -20,12 +20,11 @@ const RecordRunScreen = () => {
   const addPoint = ( item ) => {
     // from location state -> retrieve: latitude, longitude, timestamp
     const { coords: { latitude, longitude }, timestamp } = item;
-    setPoints( prevPoints => [...prevPoints, { latitude, longitude, timestamp }]);
-    console.log("LAST POINT SET!!!!");
-    //console.log({ latitude, longitude });
     setLastPoint({ latitude, longitude });
+    console.log("LAST POINT SET!!!!");
+    setPoints( prevPoints => [...prevPoints, { latitude, longitude, timestamp }]);
+    //console.log({ latitude, longitude });
     //console.log(lastPoint);
-    
   };
   
   //Runs once on component mount
@@ -45,7 +44,6 @@ const RecordRunScreen = () => {
       const { location: locationResult, errorMsg: errorMsgResult } = await getCurrentLocation();
       setLocation(locationResult);
       setErrorMsg(errorMsgResult);
-      addPoint(locationResult);
     })();
     
     // set up interval to run getCurrentLocation every 3 seconds
@@ -53,17 +51,21 @@ const RecordRunScreen = () => {
       const { location: locationResult, errorMsg: errorMsgResult } = await getCurrentLocation();
       setLocation(locationResult);
       setErrorMsg(errorMsgResult);
-      setDistance(distance + calculateDistance (locationResult));
-      addPoint(locationResult);
-      console.log(lastPoint);
-      
       //Calculate distance between this point and lastPoint
-      
     }, 3000);
 
     return () => clearInterval(intervalId);
   }, []);
-
+  
+  //Every time location is updated
+  useEffect(() => {
+      if (location){
+        setDistance(distance + calculateDistance (location));
+        addPoint(location); //updates lastPoint
+        console.log(lastPoint);        
+      }
+  }, [location]);
+  
   const printPoints = () => {
     points.forEach(item => {
       console.log(item);
@@ -73,11 +75,13 @@ const RecordRunScreen = () => {
   
   const calculateDistance = ( currentLocation ) => {
    // lastPoint is an actual point of 3 parts
-   // currentLocation is a location object (covert)
+   // currentLocation is a location object (convert)
+    if (!lastPoint){
+      return 0;
+    }
     let { coords: { latitude, longitude } } = currentLocation;
-    
     console.log("CALCULATING DISTANCE!!!!");
-    //console.log(lastPoint);
+    console.log(lastPoint);
     
     return getDistance(
       {latitude: lastPoint.latitude,longitude: lastPoint.longitude},
