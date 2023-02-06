@@ -12,19 +12,15 @@ const RecordRunScreen = () => {
   const [time, setTime] = useState(0);
   
   const [points, setPoints] = useState([]);
-  
   const [distance, setDistance] = useState(0); //meters
-  const [lastPoint, setLastPoint] = useState(null); //null correct?
+  const [lastPoint, setLastPoint] = useState(null);
   
   
   const addPoint = ( item ) => {
     // from location state -> retrieve: latitude, longitude, timestamp
     const { coords: { latitude, longitude }, timestamp } = item;
     setLastPoint({ latitude, longitude });
-    console.log("LAST POINT SET!!!!");
     setPoints( prevPoints => [...prevPoints, { latitude, longitude, timestamp }]);
-    //console.log({ latitude, longitude });
-    //console.log(lastPoint);
   };
   
   //Runs once on component mount
@@ -37,7 +33,6 @@ const RecordRunScreen = () => {
   }, []); 
   
   //Permissions and setting location (Run only once)
-
   useEffect(() => {
     // run getCurrentLocation once on component mount
     (async () => {
@@ -51,7 +46,6 @@ const RecordRunScreen = () => {
       const { location: locationResult, errorMsg: errorMsgResult } = await getCurrentLocation();
       setLocation(locationResult);
       setErrorMsg(errorMsgResult);
-      //Calculate distance between this point and lastPoint
     }, 3000);
 
     return () => clearInterval(intervalId);
@@ -79,10 +73,7 @@ const RecordRunScreen = () => {
     if (!lastPoint){
       return 0;
     }
-    let { coords: { latitude, longitude } } = currentLocation;
-    console.log("CALCULATING DISTANCE!!!!");
-    console.log(lastPoint);
-    
+    let { coords: { latitude, longitude } } = currentLocation; 
     return getDistance(
       {latitude: lastPoint.latitude,longitude: lastPoint.longitude},
       {latitude: latitude,longitude: longitude}
