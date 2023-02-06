@@ -46,7 +46,7 @@ const RecordRunScreen = () => {
       const { location: locationResult, errorMsg: errorMsgResult } = await getCurrentLocation();
       setLocation(locationResult);
       setErrorMsg(errorMsgResult);
-    }, 3000);
+    }, 2500);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -56,7 +56,7 @@ const RecordRunScreen = () => {
       if (location){
         setDistance(distance + calculateDistance (location));
         addPoint(location); //updates lastPoint
-        console.log(lastPoint);        
+        //console.log(lastPoint);        
       }
   }, [location]);
   
@@ -74,10 +74,19 @@ const RecordRunScreen = () => {
       return 0;
     }
     let { coords: { latitude, longitude } } = currentLocation; 
-    return getDistance(
+    d = getDistance(
       {latitude: lastPoint.latitude,longitude: lastPoint.longitude},
-      {latitude: latitude,longitude: longitude}
-    )
+      {latitude: latitude,longitude: longitude},
+      accuracy = 0.3
+    );
+    console.log(latitude, longitude); 
+    console.log(d);
+    
+    //Account for variance in gps data
+    if (d < 3){
+      return 0;
+    }
+    return Math.round(d);
   };
   
   const { height, width } = Dimensions.get( 'window' );
