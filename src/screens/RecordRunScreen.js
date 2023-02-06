@@ -8,7 +8,7 @@ import getDistance from 'geolib/es/getDistance';
 
 const RecordRunScreen = () => {
   const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState('Use effect not run');
+  const [errorMsg, setErrorMsg] = useState('Map Loading...');
   const [time, setTime] = useState(0);
   
   const [points, setPoints] = useState([]);
@@ -16,11 +16,13 @@ const RecordRunScreen = () => {
   const [lastPoint, setLastPoint] = useState(null);
   
   
-  const addPoint = ( item ) => {
+  const addPoint = ( item, d ) => {
     // from location state -> retrieve: latitude, longitude, timestamp
     const { coords: { latitude, longitude }, timestamp } = item;
     setLastPoint({ latitude, longitude });
-    setPoints( prevPoints => [...prevPoints, { latitude, longitude, timestamp }]);
+    if (d !== 0){
+      setPoints( prevPoints => [...prevPoints, { latitude, longitude, timestamp }]);
+    }
   };
   
   //Runs once on component mount
@@ -48,15 +50,26 @@ const RecordRunScreen = () => {
       setErrorMsg(errorMsgResult);
     }, 2500);
 
-    return () => clearInterval(intervalId);
+    return () => {
+      console.log('Cleanup called for location request');
+      clearInterval(intervalId);
+      setLocation(undefined);
+      setPoints([]);
+      setTime(0);
+      setLastPoint(undefined);
+      setDistance(0);
+      setErrorMsg("");
+    };
   }, []);
   
   //Every time location is updated
   useEffect(() => {
       if (location){
-        setDistance(distance + calculateDistance (location));
-        addPoint(location); //updates lastPoint
-        //console.log(lastPoint);        
+        let d = calculateDistance (location);
+        if (d !== 0){
+          setDistance(distance + d);
+        }
+        addPoint(location, d); //updates lastPoint too   
       }
   }, [location]);
   
@@ -67,13 +80,13 @@ const RecordRunScreen = () => {
     console.log(points.length);
   };
   
-  const calculateDistance = ( currentLocation ) => {
+  const calculateDistance = ( location ) => {
    // lastPoint is an actual point of 3 parts
    // currentLocation is a location object (convert)
     if (!lastPoint){
       return 0;
     }
-    let { coords: { latitude, longitude } } = currentLocation; 
+    let { coords: { latitude, longitude } } = location; 
     d = getDistance(
       {latitude: lastPoint.latitude,longitude: lastPoint.longitude},
       {latitude: latitude,longitude: longitude},
@@ -87,6 +100,15 @@ const RecordRunScreen = () => {
       return 0;
     }
     return Math.round(d);
+  };
+  
+  //End Run Button is clicked
+  //Stop timer?
+  //Get data -> current date, distance (convert to km?), elapsedTime (minutes)
+  //Append to JSON file
+  const endRun = () => {
+    
+    
   };
   
   const { height, width } = Dimensions.get( 'window' );
@@ -124,7 +146,7 @@ const RecordRunScreen = () => {
         </Box>        
         <Box style={styles.runData}>
           <Text style={styles.informationText}>{formattedTime}</Text>
-          <Text style={styles.informationText}>{distance}</Text>                           
+          <Text style={styles.informationText}>{distance}m</Text>                           
         </Box>   
       </Box>
            
