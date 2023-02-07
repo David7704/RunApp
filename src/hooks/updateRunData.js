@@ -3,7 +3,7 @@ import * as FileSystem from 'expo-file-system';
 const pathToRunData = FileSystem.documentDirectory + 'RunData7.json';
 
 export async function appendDataToRunData(data) {
-  try {
+  try{
     console.log('Appending data to RunData.json:', data);
     const fileExists = await FileSystem.getInfoAsync(pathToRunData);
     let existingData = [];
@@ -15,7 +15,7 @@ export async function appendDataToRunData(data) {
     console.log(existingData);
     await FileSystem.writeAsStringAsync(pathToRunData, JSON.stringify(existingData));
     console.log('Data successfully appended to RunData.json');
-  } catch (e) {
+  }catch(e){
     console.error(e);
   }
 }

@@ -3,15 +3,33 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const Activity = ({ item }) =>{
+  const convertMetersToKilometers = (meters) => (meters / 1000).toFixed(2); 
+  const distanceInKilometers = convertMetersToKilometers(item.distance);  
+  const time = convertMillisecondsToHoursAndMinutes(item.elapsedTime);
+  
   return (
     <Box style={styles.container}>
         <View style={styles.textParent}>
-            <Text style={styles.time}>{item.elapsedTime}m</Text>
-            <Text style={styles.distance}>{item.distance}</Text>
+            <Text style={styles.time}>{time}</Text>
+            <Text style={styles.distance}>{distanceInKilometers}km</Text>
             <Text style={styles.date}>{item.date}</Text>           
         </View>
     </Box>
   );  
+};
+
+const convertMillisecondsToHoursAndMinutes = (milliseconds) => {
+  let totalMinutes = Math.floor(milliseconds / 60000);
+  let hours = Math.floor(totalMinutes / 60);
+  let minutes = totalMinutes % 60;
+
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`;
+  } else if (minutes > 0) {
+    return `0h ${minutes}m`;
+  } else {
+    return `0h 1m`;
+  }
 };
 
 const styles = StyleSheet.create({

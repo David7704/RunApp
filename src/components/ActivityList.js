@@ -5,7 +5,6 @@ import Activity from './Activity';
 import * as FileSystem from 'expo-file-system';
 
 const ActivityList = () =>{
-  
   const pathToRunData = FileSystem.documentDirectory + 'RunData7.json';
   const [activities, setActivities] = useState([]);
   

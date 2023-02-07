@@ -1,13 +1,11 @@
 import React, { useState, useEffect} from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { View, StyleSheet, Text, Dimensions } from 'react-native';
 import { Button, Box } from "native-base";
 import MapView from 'react-native-maps';
 import getCurrentLocation from '../hooks/getCurrentLocation';
 import getDistance from 'geolib/es/getDistance';
-import RunData from '../../RunData.json';
-
 import { appendDataToRunData } from '../hooks/updateRunData';
-
+import UUID from 'react-native-uuid';
 
 const RecordRunScreen = ( { navigation }) => {
   const [location, setLocation] = useState(null);
@@ -94,8 +92,6 @@ const RecordRunScreen = ( { navigation }) => {
       {latitude: latitude,longitude: longitude},
       accuracy = 0.3
     );
-    //console.log(latitude, longitude); 
-    //console.log(d);
     //Account for variance in gps data
     if (d < 3){
       return 0;
@@ -104,18 +100,26 @@ const RecordRunScreen = ( { navigation }) => {
   };
   
   //End Run Button is clicked
-  //Stop timer?
   //Get data -> current date, distance (convert to km?), elapsedTime (minutes)
   //Append to JSON file
-  //Here just need to add real values and then that's it & change the filename of RunDataX.json
+  //time is in miliseconds
+  //distance is in meters
   async function endRun() {
   try {
-    await appendDataToRunData({
-     'id': '13',
-     'date': '2023-02-09',
-     'distance': '17',
-     'elapsedTime': '77'
-    });
+    const date = new Date();
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear().toString().slice(-2);
+    const dateFormatted = `${day}/${month}/${year}`;
+    
+    //Store the Points array as well
+    const runDataObject = {
+      id: UUID.v4(),
+      date: dateFormatted,
+      distance: distance,
+      elapsedTime: time
+    };
+    await appendDataToRunData(runDataObject);
   } catch (e) {
     console.error('An error occurred while appending data:', e);
   }
