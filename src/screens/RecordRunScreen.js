@@ -4,9 +4,12 @@ import { Button, Box } from "native-base";
 import MapView from 'react-native-maps';
 import getCurrentLocation from '../hooks/getCurrentLocation';
 import getDistance from 'geolib/es/getDistance';
+import RunData from '../../RunData.json';
+
+import { appendDataToRunData } from '../hooks/updateRunData';
 
 
-const RecordRunScreen = () => {
+const RecordRunScreen = ( { navigation }) => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState('Map Loading...');
   const [time, setTime] = useState(0);
@@ -14,7 +17,6 @@ const RecordRunScreen = () => {
   const [points, setPoints] = useState([]);
   const [distance, setDistance] = useState(0); //meters
   const [lastPoint, setLastPoint] = useState(null);
-  
   
   const addPoint = ( item, d ) => {
     // from location state -> retrieve: latitude, longitude, timestamp
@@ -51,7 +53,7 @@ const RecordRunScreen = () => {
     }, 2500);
 
     return () => {
-      console.log('Cleanup called for location request');
+      console.log('Cleanup function called');
       clearInterval(intervalId);
       setLocation(undefined);
       setPoints([]);
@@ -92,9 +94,8 @@ const RecordRunScreen = () => {
       {latitude: latitude,longitude: longitude},
       accuracy = 0.3
     );
-    console.log(latitude, longitude); 
-    console.log(d);
-    
+    //console.log(latitude, longitude); 
+    //console.log(d);
     //Account for variance in gps data
     if (d < 3){
       return 0;
@@ -106,10 +107,20 @@ const RecordRunScreen = () => {
   //Stop timer?
   //Get data -> current date, distance (convert to km?), elapsedTime (minutes)
   //Append to JSON file
-  const endRun = () => {
-    
-    
-  };
+  //Here just need to add real values and then that's it & change the filename of RunDataX.json
+  async function endRun() {
+  try {
+    await appendDataToRunData({
+     'id': '13',
+     'date': '2023-02-09',
+     'distance': '17',
+     'elapsedTime': '77'
+    });
+  } catch (e) {
+    console.error('An error occurred while appending data:', e);
+  }
+  navigation.navigate('Profile');
+}
   
   const { height, width } = Dimensions.get( 'window' );
   const LATITUDE_DELTA = 0.005; //Controls zoom level of map
@@ -152,7 +163,7 @@ const RecordRunScreen = () => {
            
       <Box style={styles.buttonContainer}>
         <Button
-          onPress={() => {printPoints()}}
+          onPress={() => {endRun()}}
           style={styles.endRunButton}
           size='lg'
           variant='outline'
