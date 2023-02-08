@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import { View, StyleSheet, Text, Dimensions } from 'react-native';
 import { Button, Box } from "native-base";
-import MapView from 'react-native-maps';
+import MapView, { Polyline } from 'react-native-maps';
 import getCurrentLocation from '../hooks/getCurrentLocation';
 import getDistance from 'geolib/es/getDistance';
 import { appendDataToRunData } from '../hooks/updateRunData';
@@ -18,10 +18,10 @@ const RecordRunScreen = ( { navigation }) => {
   
   const addPoint = ( item, d ) => {
     // from location state -> retrieve: latitude, longitude, timestamp
-    const { coords: { latitude, longitude }, timestamp } = item;
+    const { coords: { latitude, longitude } } = item;
     setLastPoint({ latitude, longitude });
     if (d !== 0){
-      setPoints( prevPoints => [...prevPoints, { latitude, longitude, timestamp }]);
+      setPoints( prevPoints => [...prevPoints, { latitude, longitude }]);
     }
   };
   
@@ -123,6 +123,7 @@ const RecordRunScreen = ( { navigation }) => {
   } catch (e) {
     console.error('An error occurred while appending data:', e);
   }
+  printPoints();
   navigation.navigate('Profile');
 }
   
@@ -150,7 +151,14 @@ const RecordRunScreen = ( { navigation }) => {
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA,
           }}
-        />
+        >
+        <Polyline
+          coordinates={points}
+          strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
+          strokeColors={['#7F0000']}
+          strokeWidth={7}
+        />          
+        </MapView>
       : <Text style={styles.errorText}>{errorMsg}</Text>
       }
       
