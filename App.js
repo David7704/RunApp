@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
-import { NativeBaseProvider, Box} from 'native-base';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { NativeBaseProvider } from 'native-base';
+import { SafeAreaView } from 'react-native';
 
 import StackScreens from './StackScreens';
 import React from 'react';

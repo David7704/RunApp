@@ -2,10 +2,12 @@ import React, { useState, useEffect} from 'react';
 import { View, StyleSheet, Text, Dimensions } from 'react-native';
 import { Button, Box } from "native-base";
 import MapView, { Polyline } from 'react-native-maps';
-import getCurrentLocation from '../hooks/getCurrentLocation';
 import getDistance from 'geolib/es/getDistance';
-import { appendDataToRunData } from '../hooks/updateRunData';
 import UUID from 'react-native-uuid';
+import getCurrentLocation from '../hooks/getCurrentLocation';
+import { appendDataToRunData } from '../hooks/updateRunData';
+import { sendDataToFirebase } from '../hooks/sendToFirebase';
+
 
 const RecordRunScreen = ( { navigation }) => {
   const [location, setLocation] = useState(null);
@@ -119,11 +121,12 @@ const RecordRunScreen = ( { navigation }) => {
       distance: distance,
       elapsedTime: time
     };
-    await appendDataToRunData(runDataObject);
+    await appendDataToRunData(runDataObject), sendDataToFirebase(runDataObject);
   } catch (e) {
     console.error('An error occurred while appending data:', e);
   }
   printPoints();
+  
   navigation.navigate('Profile');
 }
   
